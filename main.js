@@ -1,4 +1,6 @@
 const fetch = require('node-fetch')
+const { resolve } = require('path')
+const { exit } = require('process')
 const puppeteer = require('puppeteer')
 
 async function fetchProxies() {
@@ -32,26 +34,35 @@ async function createBrowser(proxy, show) {
 }
 
 async function letsGo() {
-    await letsGoWithProxies(await fetchProxies())
+    const browser = await letsGoWithProxies(await fetchProxies())
 }
 
+/**
+ * @param {string[]} proxies
+ * 
+ * @returns {Promise<import('puppeteer').Browser>} 
+ */
 async function letsGoWithProxies(proxies) {
-    const id = Math.floor(Math.random() * proxies.length)
-    const proxy = proxies[id]
-    console.log('Test de ' + proxy + ' ...')
-    const browser = await createBrowser(proxy, false)
-    const ipCheckerPage = await browser.newPage()
-    try {
-        await ipCheckerPage.goto('https://api.myip.com')
-        console.log('CELUI LA MARCHE !!!')
-        console.log(proxy)
-    } catch(e) {
-        proxies.splice(id, 1)
-        console.error('Proxy marche pas :\'(')
-        console.error(e)
-        browser.close()
-        letsGoWithProxies(proxies)
-    }
+    return new Promise(async resolve => {
+        const id = Math.floor(Math.random() * proxies.length)
+        const proxy = proxies[id]
+        console.log('Test de ' + proxy + ' ...')
+        const browser = await createBrowser(proxy, false)
+        const ipCheckerPage = await browser.newPage()
+        try {
+            await ipCheckerPage.goto('https://api.myip.com')
+            const bodyHTML = await ipCheckerPage.evaluate(() => document.body.innerHTML)
+            console.log(JSON.parse(bodyHTML))
+            console.log(proxy + ' MARCHE !!!')
+            resolve(browser)
+        } catch(e) {
+            proxies.splice(id, 1)
+            console.log('Proxy ' + proxy + ' marche pas :\'(')
+            browser.close()
+            proxies.length ? letsGoWithProxies(proxies) : letsGo()
+        }
+    })
+    
 }
 
-letsGo()
+letsGo
