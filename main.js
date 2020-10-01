@@ -32,7 +32,10 @@ async function createBrowser(proxy, show) {
 }
 
 async function letsGo() {
-    const proxies = await fetchProxies()
+    await letsGoWithProxies(await fetchProxies())
+}
+
+async function letsGoWithProxies(proxies) {
     const browser = await createBrowser(proxies[Math.floor(Math.random() * proxies.length)], true)
     const ipCheckerPage = await browser.newPage()
     try {
@@ -40,9 +43,8 @@ async function letsGo() {
     } catch(e) {
         console.log(e)
         browser.close()
-        letsGo()
-    }
-    
+        letsGoWithProxies(proxies)
+    } 
 }
 
-letsGo()
+await letsGo()
