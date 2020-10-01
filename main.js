@@ -43,6 +43,8 @@ async function letsGoWithProxies(proxies) {
     const ipCheckerPage = await browser.newPage()
     try {
         await ipCheckerPage.goto('https://api.myip.com')
+        console.log('CELUI LA MARCHE !!!')
+        console.log(proxy)
     } catch(e) {
         proxies.splice(id, 1)
         console.error('Proxy marche pas :\'(')
@@ -50,8 +52,6 @@ async function letsGoWithProxies(proxies) {
         browser.close()
         letsGoWithProxies(proxies)
     }
-    console.log('CELUI LA MARCHE !!!')
-    console.log(proxy)
 }
 
 letsGo()
