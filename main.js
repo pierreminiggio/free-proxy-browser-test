@@ -37,7 +37,8 @@ async function letsGo() {
 
 async function letsGoWithProxies(proxies) {
     const id = Math.floor(Math.random() * proxies.length)
-    const browser = await createBrowser(proxies[id], true)
+    const proxy = proxies[id]
+    const browser = await createBrowser(proxy, true)
     const ipCheckerPage = await browser.newPage()
     try {
         await ipCheckerPage.goto('https://api.myip.com')
@@ -48,6 +49,8 @@ async function letsGoWithProxies(proxies) {
         browser.close()
         letsGoWithProxies(proxies)
     }
+    console.log('CELUI LA MARCHE !!!')
+    console.log(proxy)
 }
 
 letsGo()
