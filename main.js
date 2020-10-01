@@ -47,7 +47,7 @@ async function letsGoWithProxies(proxies) {
         console.error(e)
         browser.close()
         letsGoWithProxies(proxies)
-    } 
+    }
 }
 
 letsGo()
