@@ -65,4 +65,4 @@ async function letsGoWithProxies(proxies) {
     
 }
 
-letsGo
+letsGo()
