@@ -1,6 +1,4 @@
 const fetch = require('node-fetch')
-const { resolve } = require('path')
-const { exit } = require('process')
 const puppeteer = require('puppeteer')
 
 async function fetchProxies() {
